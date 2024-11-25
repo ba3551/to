@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #767676;
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    p {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+    img {
+      width: 180px;
+      height: auto;
+      border-radius: 4px;
+      border: 2px solid #fff;
+    }
+
+    #aptp {
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50; 
+      color: white;
+      border: none; 
+    }
+
+    button:hover {
+      opacity: 0.8; 
+    }
+
+    #search-container {
+      margin-bottom: 15px;
+    }
+
+    
+
+    .actor,.rand {
+      background: #CBCBCB;
+      width: 75%;
+      border-radius: 4px;
+    }
+    #botmovy{
+  width: 55px;
+  height: 45px;
+  margin: 10px;
+  text-align: center;
+  color:#000;
+  background-color: #F5F6F8;
+  border: 1px solid #ffffff;
+  border-radius:5px;
+}
+#botmov {
+            background-image: url('download.png');
+            background-color: #CBCBCB;
+            margin: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 50px; 
+            height: 50px; 
+            text-align: center;
+            bortder: none;
+        }
+#botmovd {
+            background-image: url('watch.png');
+            background-color: #CBCBCB;
+            margin: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 50px; 
+            height: 50px; 
+            text-align: center;
+            bortder: none;
+            color: rgba(0, 0, 0, 0.0);
+        }    
+a {
+  color: rgba(0, 0, 0, 0.0);
+}
+#fetch-data{
+	border: none;
+	background-image: url('sr.png');
+    background-color: #CBCBCB;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 25px; 
+    height: 35px; 
+    text-align: center;
+    bortder: none;
+    color: rgba(0, 0, 0, 0.0);
+}
+#search-input {
+  width: 250px;
+  height: 35px;
+  padding: 10px;
+  text-align: center;
+  background-color: #CBCBCB;
+  border-radius:15px;
+  border: 1px solid #CBCBCB;
+}
+.prom{
+				background-color: #CBCBCB;
+				margin-top:30px;
+				padding: 5px;
+				width: 320px;
+				border: 2px solid #36383d;
+				border-radius: 30px;
+				
+}
+  </style>
+</head>
+<body>
+  <center>
+  <div id="app2">
+  	<div id="app">
+    <h1>Movies</h1>
+    
+   <div class="prom" id="search-section"><input id="search-input" type="text" placeholder="Search by title movie"> <button id="fetch-data">S</button></div>
+    <div id="random-image"></div></div>
+    <div id="data"></div>
+    <p id ="cop">copyright © b_4qr 2024</p>
+    </div>
+  
+  <br><br>
+  <div id="video-container"></div>
+  </center>
+  <script>
+async function fetchAndDisplayMovies(numberOfMovies) {
+  try {
+    const response = await fetch('movies(468).json'); 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const movies = await response.json();
+
+    if (movies.length < numberOfMovies) {
+      console.warn(`Warning: Not enough movies found. Only displaying ${movies.length} movies.`);
+    }
+
+    const randomMovieContainer = document.getElementById('random-image'); 
+
+    randomMovieContainer.innerHTML ="<h3>Movies Night Top 10</h3>"; 
+
+    for (let i = 0; i < numberOfMovies && i < movies.length; i++) {
+      const randomMovie = movies[Math.floor(Math.random() * movies.length)];
+     
+      const movieHTML = `
+        <div class="rand"><br>
+          <center><img id="imt" src="${randomMovie.img}" alt="${randomMovie.title}"></center>
+          <h5>${randomMovie.title}</h5>
+          <button id="botmovd" onclick="showVideo('${randomMovie.film}')">Watch</button>
+          <button id="botmov"><a href="${randomMovie.film}">Download</a></button>
+          <br>
+        </div><br>`;
+
+      randomMovieContainer.innerHTML += movieHTML; 
+    }
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+  }
+}
+
+fetchAndDisplayMovies(10);
+    document.getElementById('fetch-data').addEventListener('click', function() {
+      fetchData();
+    });
+
+    function fetchData() {
+      fetch('movies-total.json')
+        .then(response => response.json())
+        .then(data => {
+          let output = '';
+          document.getElementById('app').style.display = 'none';
+          document.getElementById('random-image').style.display = 'none';
+          
+
+          
+          
+          const searchTerm = document.getElementById('search-input').value.toLowerCase();
+          const filteredData = data.filter(post => post.title.toLowerCase().includes(searchTerm));
+
+          if (searchTerm === '') {
+          	
+            output = '<p class="error">Enter actor name please</p>';
+          } else {
+  console.log(filteredData.length)
+  output +=`<h3>Movies Results : ${filteredData.length}</h3>`
+  filteredData.forEach(post => {
+  	output += `
+    <div class="actor">
+    	<br>
+      <img src="${post.img}"> <h3>${post.title}</h3>
+      <p>Year : ${post.year}</p><p>
+      Time : ${post.time}</p><p>
+      Age : ${post.age}</p><br><button id ="botmovd" onclick="showVideo('${post.film}')">wa</button><button id ="botmov" ><a href="${post.film}">dw</a></button><br>
+    </div>
+    <br>
+  `;
+});
+}
+
+  	document.getElementById('data').innerHTML = output;
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  </script>
+<script>
+function showVideo(videoUrl) {
+  const videoContainer = document.getElementById('video-container'); 
+  document.getElementById('random-image').style.display = 'none';
+  document.getElementById('data').style.display = 'none';
+  document.getElementById('cop').style.display = 'none';
+
+  videoContainer.innerHTML = ''; 
+
+  const video = document.createElement('video');
+  video.src = videoUrl;
+  video.controls = true;
+  videoContainer.appendChild(video);
+
+  const copyright = document.createElement('p');
+  copyright.textContent = 'copyright © b_4qr 2024';
+  videoContainer.appendChild(copyright);
+
+  video.play();
+}
+</script>  
+</body>
+</html>
